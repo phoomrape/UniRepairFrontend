@@ -22,7 +22,7 @@ const DashboardLayout = () => {
         sx={{
           flexGrow: 1,
           p: { xs: 2, sm: 3, md: 4 },
-          width: { md: `calc(100% - 260px)` },
+          width: { md: `calc(100% - 250px)` },
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column'

@@ -16,10 +16,10 @@ import {
   DialogActions,
   TextField,
   MenuItem,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent
+  Chip,
+  Stack,
+  Breadcrumbs,
+  Link as MuiLink
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
@@ -27,6 +27,12 @@ import PersonIcon from '@mui/icons-material/Person';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BuildIcon from '@mui/icons-material/Build';
 import CancelIcon from '@mui/icons-material/Cancel';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
+import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import StatusBadge, { STATUS_CONFIG } from '../components/StatusBadge';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -100,16 +106,6 @@ const RepairDetail = () => {
     }
   };
 
-  const handleCancelByStudent = async () => {
-    if (!window.confirm('คุณต้องการยกเลิกคำขอแจ้งซ่อมนี้ใช่หรือไม่?')) return;
-    try {
-      await API.put(`/repairs/${id}/cancel`, { note: 'ผู้แจ้งซ่อมยกเลิกรายการด้วยตนเอง' });
-      fetchDetail();
-    } catch (err) {
-      alert(err.response?.data?.message || 'ไม่สามารถยกเลิกคำขอได้');
-    }
-  };
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 5 }}>
@@ -120,8 +116,8 @@ const RepairDetail = () => {
 
   if (error || !repair) {
     return (
-      <Box>
-        <Alert severity="error" sx={{ mb: 2 }}>{error || 'ไม่พบข้อมูล'}</Alert>
+      <Box sx={{ p: 2 }}>
+        <Alert severity="error" sx={{ mb: 2, borderRadius: 2.5 }}>{error || 'ไม่พบข้อมูล'}</Alert>
         <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/repairs')}>
           กลับสู่รายการแจ้งซ่อม
         </Button>
@@ -130,214 +126,274 @@ const RepairDetail = () => {
   }
 
   const isStaffOrAdmin = user?.role === 'ADMIN' || user?.role === 'STAFF';
-  const isOwner = user?.id === repair.userId;
+
+  // Workflow timeline steps for RepairHub
+  const timelineSteps = [
+    { label: 'Requested (แจ้งซ่อม)', date: new Date(repair.createdAt).toLocaleString('th-TH'), done: true },
+    { label: 'Received (รับเรื่อง)', date: repair.logs?.find(l => l.newStatus === 'ACCEPTED') ? 'เสร็จสิ้น' : 'รอรับเรื่อง', done: repair.status !== 'PENDING' },
+    { label: 'Investigating (ตรวจสอบ)', date: 'กำลังตรวจสอบ', done: repair.status === 'IN_PROGRESS' || repair.status === 'COMPLETED' },
+    { label: 'Assigned (มอบหมาย)', date: repair.technician ? repair.technician.name : 'ยังไม่มอบหมาย', done: !!repair.assignedTo },
+    { label: 'In Progress (กำลังดำเนินการ)', date: repair.status === 'IN_PROGRESS' ? 'เริ่มดำเนินการ' : '-', done: repair.status === 'IN_PROGRESS' || repair.status === 'COMPLETED' },
+    { label: 'Completed (เสร็จสิ้น)', date: repair.completedAt ? new Date(repair.completedAt).toLocaleString('th-TH') : '-', done: repair.status === 'COMPLETED' }
+  ];
 
   return (
-    <Box sx={{ maxWidth: 1000, margin: '0 auto' }}>
-      {/* Header Bar */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/repairs')} color="inherit">
-          ย้อนกลับ
-        </Button>
-        <Box sx={{ display: 'flex', gap: 1.5 }}>
-          {isStaffOrAdmin && (
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<EditIcon />}
-              onClick={() => setOpenModal(true)}
-              sx={{ fontWeight: 700 }}
-            >
-              จัดการสถานะ & มอบหมายงาน
-            </Button>
-          )}
+    <Box sx={{ maxWidth: 1080, margin: '0 auto', pb: 5 }}>
+      {/* Breadcrumb */}
+      <Breadcrumbs sx={{ mb: 2, fontSize: '0.85rem' }}>
+        <MuiLink underline="hover" color="inherit" onClick={() => navigate('/repairs')} sx={{ cursor: 'pointer' }}>
+          Repair Requests
+        </MuiLink>
+        <Typography color="text.primary" sx={{ fontSize: '0.85rem', fontWeight: 700 }}>
+          REQ-2023-00{repair.id}
+        </Typography>
+      </Breadcrumbs>
 
-          {isOwner && repair.status === 'PENDING' && (
-            <Button
-              variant="outlined"
-              color="error"
-              startIcon={<CancelIcon />}
-              onClick={handleCancelByStudent}
-              sx={{ fontWeight: 700 }}
-            >
-              ยกเลิกคำขอ
-            </Button>
-          )}
+      {/* Title & Top Action Bar */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3, flexWrap: 'wrap', gap: 2 }}>
+        <Box>
+          <Typography variant="h5" sx={{ fontWeight: 800, color: '#0f172a', letterSpacing: -0.5, mb: 0.5 }}>
+            {repair.description?.split('\n')[0] || repair.category?.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            แจ้งเมื่อ: {new Date(repair.createdAt).toLocaleString('th-TH')} โดย {repair.user?.name}
+          </Typography>
         </Box>
+
+        <Stack direction="row" spacing={1.5}>
+          {isStaffOrAdmin && (
+            <>
+              <Button
+                variant="outlined"
+                startIcon={<EditIcon />}
+                onClick={() => setOpenModal(true)}
+                sx={{ borderRadius: 2.5, borderColor: '#cbd5e1', color: '#334155', fontWeight: 700 }}
+              >
+                แก้ไข
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<BuildIcon />}
+                onClick={() => setOpenModal(true)}
+                sx={{ borderRadius: 2.5, bgcolor: '#1d4ed8', fontWeight: 700 }}
+              >
+                รับงาน
+              </Button>
+            </>
+          )}
+        </Stack>
       </Box>
 
-      {/* Main Content Grid */}
+      {/* Main Grid */}
       <Grid container spacing={3}>
-        {/* Left Column: Repair Details */}
-        <Grid item xs={12} md={7}>
-          <Card sx={{ p: 3, mb: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-              <Box>
-                <Typography variant="caption" color="primary.main" sx={{ fontWeight: 700 }}>
-                  คำขอแจ้งซ่อม #{repair.id.toString().padStart(4, '0')}
-                </Typography>
-                <Typography variant="h5" sx={{ fontWeight: 700, mt: 0.5 }}>
-                  {repair.category?.name}
+        {/* Left Column: Details & Comments */}
+        <Grid item xs={12} md={8}>
+          {/* Details Card */}
+          <Card sx={{ p: 3, mb: 3, borderRadius: 4, border: '1px solid #e2e8f0' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <InfoOutlinedIcon sx={{ color: '#1d4ed8', fontSize: 20 }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#0f172a' }}>
+                  รายละเอียดงาน
                 </Typography>
               </Box>
-              <StatusBadge status={repair.status} size="medium" />
+              <Chip label={repair.status} size="small" sx={{ bgcolor: '#eff6ff', color: '#1d4ed8', fontWeight: 800 }} />
             </Box>
 
-            <Divider sx={{ my: 2 }} />
-
-            <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid item xs={12} sm={6}>
-                <Paper variant="outlined" sx={{ p: 2, bgcolor: '#f8fafc' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
-                    <PersonIcon color="primary" fontSize="small" />
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                      ข้อมูลผู้แจ้ง
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>{repair.user?.name}</Typography>
-                  <Typography variant="caption" color="text.secondary" display="block">
-                    อีเมล: {repair.user?.email}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" display="block">
-                    เบอร์ติดต่อ: {repair.user?.phone || 'ไม่ได้ระบุ'}
-                  </Typography>
-                </Paper>
+            <Grid container spacing={2} sx={{ mb: 3 }}>
+              <Grid item xs={6}>
+                <Typography variant="caption" sx={{ fontWeight: 700, color: '#64748b', display: 'block', mb: 0.5 }}>
+                  รหัสงาน (TICKET ID)
+                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: '#0f172a' }}>
+                  REQ-2023-00{repair.id}
+                </Typography>
               </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Paper variant="outlined" sx={{ p: 2, bgcolor: '#f8fafc' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
-                    <LocationOnIcon color="secondary" fontSize="small" />
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                      สถานที่และห้อง
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>{repair.location?.buildingName}</Typography>
-                  <Typography variant="caption" color="text.secondary" display="block">
-                    ห้อง: {repair.room}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" display="block">
-                    วันที่แจ้ง: {new Date(repair.createdAt).toLocaleString('th-TH')}
-                  </Typography>
-                </Paper>
+              <Grid item xs={6}>
+                <Typography variant="caption" sx={{ fontWeight: 700, color: '#64748b', display: 'block', mb: 0.5 }}>
+                  หมวดหมู่ (CATEGORY)
+                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: '#0f172a' }}>
+                  {repair.category?.name}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" sx={{ fontWeight: 700, color: '#64748b', display: 'block', mb: 0.5 }}>
+                  สถานที่ (LOCATION)
+                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: '#0f172a' }}>
+                  {repair.location?.buildingName}, ห้อง {repair.room}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" sx={{ fontWeight: 700, color: '#64748b', display: 'block', mb: 0.5 }}>
+                  ระดับความสำคัญ (PRIORITY)
+                </Typography>
+                <Chip label="ปานกลาง (Medium)" size="small" color="warning" sx={{ fontWeight: 700, height: 22, fontSize: '0.72rem' }} />
               </Grid>
             </Grid>
 
-            {/* Description */}
-            <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>
-              รายละเอียดปัญหาที่แจ้ง:
+            {/* Description Box */}
+            <Typography variant="caption" sx={{ fontWeight: 700, color: '#64748b', display: 'block', mb: 0.8 }}>
+              รายละเอียดปัญหา (DESCRIPTION)
             </Typography>
-            <Paper variant="outlined" sx={{ p: 2.5, bgcolor: '#ffffff', mb: 3 }}>
-              <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
+            <Paper variant="outlined" sx={{ p: 2.5, bgcolor: '#f8fafc', borderRadius: 3, border: '1px solid #e2e8f0', mb: 3 }}>
+              <Typography variant="body2" sx={{ color: '#334155', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
                 {repair.description}
               </Typography>
             </Paper>
 
-            {/* Attached Photo */}
-            {repair.image && (
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>
-                  รูปภาพประกอบปัญหา:
-                </Typography>
-                <Box
-                  component="img"
-                  src={repair.image}
-                  alt="Repair photo"
-                  onClick={() => setPhotoOpen(true)}
-                  sx={{
-                    width: '100%',
-                    maxHeight: 280,
-                    objectFit: 'cover',
-                    borderRadius: 3,
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                    transition: 'transform 0.2s',
-                    '&:hover': { transform: 'scale(1.01)' }
-                  }}
-                />
-                <Typography variant="caption" color="text.secondary" align="center" display="block" sx={{ mt: 0.5 }}>
-                  (คลิกที่รูปภาพเพื่อขยายใหญ่)
+            {/* Technician info */}
+            <Typography variant="caption" sx={{ fontWeight: 700, color: '#64748b', display: 'block', mb: 0.8 }}>
+              ช่างผู้รับผิดชอบ (ASSIGNED TECH)
+            </Typography>
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <Avatar sx={{ bgcolor: '#eff6ff', color: '#1d4ed8', width: 36, height: 36, fontWeight: 700, fontSize: '0.85rem' }}>
+                {repair.technician?.name?.charAt(0) || 'T'}
+              </Avatar>
+              <Box>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: '#0f172a' }}>
+                  {repair.technician ? repair.technician.name : 'ยังไม่มอบหมายช่าง'}
                 </Typography>
               </Box>
-            )}
+            </Stack>
+          </Card>
 
-            {/* Assigned Technician */}
-            <Paper variant="outlined" sx={{ p: 2, bgcolor: '#f0fdf4', border: '1px solid #bbf7d0' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <BuildIcon sx={{ color: '#059669' }} />
-                <Box>
-                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                    ผู้รับผิดชอบการซ่อม:
+          {/* Work logs & Comments */}
+          <Card sx={{ p: 3, borderRadius: 4, border: '1px solid #e2e8f0' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+              <ModeCommentOutlinedIcon sx={{ color: '#1d4ed8', fontSize: 20 }} />
+              <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#0f172a' }}>
+                บันทึกการปฏิบัติงาน & ความคิดเห็น
+              </Typography>
+            </Box>
+
+            <Stack direction="column" spacing={2}>
+              {repair.logs?.map((log) => (
+                <Paper key={log.id} variant="outlined" sx={{ p: 2, borderRadius: 3, bgcolor: '#ffffff', border: '1px solid #e2e8f0' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
+                    <Avatar sx={{ width: 32, height: 32, bgcolor: '#eff6ff', color: '#1d4ed8', fontSize: '0.75rem', fontWeight: 700 }}>
+                      {log.user?.name?.charAt(0) || 'U'}
+                    </Avatar>
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#0f172a' }}>
+                        {log.user?.name} ({log.user?.role})
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {new Date(log.createdAt).toLocaleString('th-TH')}
+                      </Typography>
+                    </Box>
+                    <Chip label={log.newStatus} size="small" variant="outlined" sx={{ height: 20, fontSize: '0.65rem' }} />
+                  </Box>
+
+                  <Typography variant="body2" sx={{ color: '#334155', mt: 1 }}>
+                    {log.note || 'อัปเดตสถานะงานซ่อม'}
                   </Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 700, color: '#047857' }}>
-                    {repair.technician ? `${repair.technician.name} (${repair.technician.phone || repair.technician.email})` : 'ยังไม่ได้มอบหมายช่างซ่อม'}
-                  </Typography>
-                </Box>
-              </Box>
-            </Paper>
+
+                  {/* Attached photo preview */}
+                  {repair.image && (
+                    <Box sx={{ mt: 1.5 }}>
+                      <Paper variant="outlined" sx={{ p: 1, display: 'inline-block', borderRadius: 2 }}>
+                        <Box
+                          component="img"
+                          src={repair.image}
+                          alt="Attached preview"
+                          onClick={() => setPhotoOpen(true)}
+                          sx={{ width: 140, height: 100, objectFit: 'cover', borderRadius: 1.5, cursor: 'pointer' }}
+                        />
+                      </Paper>
+                    </Box>
+                  )}
+                </Paper>
+              ))}
+            </Stack>
           </Card>
         </Grid>
 
-        {/* Right Column: Interactive Stepper Timeline & Logs */}
-        <Grid item xs={12} md={5}>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: 'primary.main' }}>
-              ⏱️ Timeline ประวัติการดำเนินงาน
+        {/* Right Column: Actions Control & Progress Timeline */}
+        <Grid item xs={12} md={4}>
+          {/* Actions Box */}
+          <Card sx={{ p: 2.5, mb: 3, borderRadius: 4, border: '1px solid #e2e8f0' }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#0f172a', mb: 2 }}>
+              จัดการสถานะ (ACTIONS)
             </Typography>
-            <Divider sx={{ mb: 3 }} />
 
-            <Stepper orientation="vertical" activeStep={repair.logs?.length - 1 || 0}>
-              {repair.logs?.map((log, index) => {
-                const config = STATUS_CONFIG[log.newStatus] || {};
-                return (
-                  <Step key={log.id} active expanded>
-                    <StepLabel
-                      StepIconComponent={() => (
-                        <Avatar
-                          sx={{
-                            width: 28,
-                            height: 28,
-                            bgcolor: config.bgColor || '#e2e8f0',
-                            color: config.color || '#475569',
-                            fontSize: '0.8rem',
-                            fontWeight: 700
-                          }}
-                        >
-                          {index + 1}
-                        </Avatar>
-                      )}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                          {config.label || log.newStatus}
-                        </Typography>
-                      </Box>
-                    </StepLabel>
-                    <StepContent>
-                      <Paper variant="outlined" sx={{ p: 1.5, my: 1, bgcolor: '#f8fafc', borderRadius: 2 }}>
-                        <Typography variant="body2" sx={{ color: 'text.primary', mb: 0.5 }}>
-                          {log.note || 'ไม่มีหมายเหตุ'}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary" display="block">
-                          โดย: {log.user?.name} ({log.user?.role})
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary" display="block">
-                          เวลา: {new Date(log.createdAt).toLocaleString('th-TH')}
-                        </Typography>
-                      </Paper>
-                    </StepContent>
-                  </Step>
-                );
-              })}
-            </Stepper>
+            <Stack direction="column" spacing={1.5}>
+              <Button
+                variant="outlined"
+                fullWidth
+                startIcon={<AccessTimeOutlinedIcon />}
+                onClick={() => { setNewStatus('ACCEPTED'); setOpenModal(true); }}
+                sx={{ borderRadius: 2.5, py: 1, borderColor: '#cbd5e1', color: '#334155', fontWeight: 700 }}
+              >
+                Pending Review
+              </Button>
+              <Button
+                variant="outlined"
+                fullWidth
+                color="success"
+                startIcon={<CheckCircleOutlinedIcon />}
+                onClick={() => { setNewStatus('COMPLETED'); setOpenModal(true); }}
+                sx={{ borderRadius: 2.5, py: 1, fontWeight: 700 }}
+              >
+                Completed
+              </Button>
+              <Button
+                variant="outlined"
+                fullWidth
+                color="error"
+                startIcon={<HighlightOffOutlinedIcon />}
+                onClick={() => { setNewStatus('CANCELLED'); setOpenModal(true); }}
+                sx={{ borderRadius: 2.5, py: 1, fontWeight: 700 }}
+              >
+                Closed
+              </Button>
+            </Stack>
+          </Card>
+
+          {/* Progress Timeline */}
+          <Card sx={{ p: 2.5, borderRadius: 4, border: '1px solid #e2e8f0' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+              <TimelineOutlinedIcon sx={{ color: '#1d4ed8', fontSize: 20 }} />
+              <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#0f172a' }}>
+                ความคืบหน้า (Timeline)
+              </Typography>
+            </Box>
+
+            <Stack direction="column" spacing={2.5} sx={{ position: 'relative', pl: 1 }}>
+              {timelineSteps.map((step, idx) => (
+                <Box key={idx} sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                  <Avatar
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      fontSize: '0.7rem',
+                      fontWeight: 800,
+                      bgcolor: step.done ? '#1d4ed8' : '#e2e8f0',
+                      color: step.done ? '#ffffff' : '#64748b'
+                    }}
+                  >
+                    {idx + 1}
+                  </Avatar>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 700, color: step.done ? '#0f172a' : '#94a3b8' }}>
+                      {step.label}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {step.date}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Stack>
           </Card>
         </Grid>
       </Grid>
 
       {/* Action Dialog Modal for Staff/Admin */}
       <Dialog open={openModal} onClose={() => setOpenModal(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ fontWeight: 700, bgcolor: 'primary.main', color: '#ffffff' }}>
-          ⚙️ จัดการสถานะและมอบหมายช่างซ่อม
+        <DialogTitle sx={{ fontWeight: 700, bgcolor: '#1d4ed8', color: '#ffffff' }}>
+          จัดการสถานะและมอบหมายช่างซ่อม
         </DialogTitle>
         <DialogContent sx={{ mt: 2 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, pt: 1 }}>
@@ -376,7 +432,7 @@ const RepairDetail = () => {
               multiline
               rows={3}
               label="หมายเหตุการซ่อม / รายละเอียดการเปลี่ยนสถานะ"
-              placeholder="เช่น เข้าตรวจสอบแล้วพบแอร์รั่ว สั่งซื้ออะไหล่คอยล์เย็น หรือ ซ่อมแซมระบบไฟเรียบร้อย"
+              placeholder="ระบุรายละเอียดเพิ่มเติม"
               value={note}
               onChange={(e) => setNote(e.target.value)}
             />
@@ -390,7 +446,7 @@ const RepairDetail = () => {
             variant="contained"
             onClick={handleUpdateStatus}
             disabled={actionSubmitting}
-            sx={{ fontWeight: 700, px: 3 }}
+            sx={{ fontWeight: 700, px: 3, bgcolor: '#1d4ed8' }}
           >
             {actionSubmitting ? 'กำลังบันทึก...' : 'บันทึกการเปลี่ยนแปลง'}
           </Button>

@@ -10,23 +10,24 @@ import {
   Box,
   Typography,
   Divider,
-  Chip
+  Avatar,
+  IconButton
 } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import BuildIcon from '@mui/icons-material/Build';
-import FormatListBulletIcon from '@mui/icons-material/FormatListBulleted';
-import HistoryIcon from '@mui/icons-material/History';
-import PeopleIcon from '@mui/icons-material/People';
-import CategoryIcon from '@mui/icons-material/Category';
-import LocationCityIcon from '@mui/icons-material/LocationCity';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import BuildCircleOutlinedIcon from '@mui/icons-material/BuildCircleOutlined';
+import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import ConstructionIcon from '@mui/icons-material/Construction';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const DRAWER_WIDTH = 260;
+const DRAWER_WIDTH = 250;
 
 const Sidebar = ({ open, onClose, isMobile }) => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,19 +35,19 @@ const Sidebar = ({ open, onClose, isMobile }) => {
 
   const navItems = [
     ...(role === 'ADMIN' || role === 'STAFF'
-      ? [{ label: 'แดชบอร์ดสรุปผล', icon: <DashboardIcon />, path: '/dashboard' }]
+      ? [{ label: 'Dashboard', icon: <DashboardOutlinedIcon />, path: '/dashboard' }]
       : []),
-    { label: 'แจ้งซ่อมอุปกรณ์', icon: <AddCircleOutlineIcon />, path: '/create-repair' },
     {
-      label: role === 'USER' ? 'ติดตามการแจ้งซ่อม' : 'รายการแจ้งซ่อมทั้งหมด',
-      icon: <FormatListBulletIcon />,
+      label: role === 'USER' ? 'Repair Requests' : 'Repair Requests',
+      icon: <BuildCircleOutlinedIcon />,
       path: '/repairs'
     },
-    { label: 'ประวัติแจ้งซ่อมของฉัน', icon: <HistoryIcon />, path: '/my-history' },
+    { label: 'My History', icon: <BarChartOutlinedIcon />, path: '/my-history' },
+    { label: 'Notifications', icon: <NotificationsNoneOutlinedIcon />, path: '/notifications' },
     ...(role === 'ADMIN'
       ? [
-          { label: 'จัดการผู้ใช้งาน', icon: <PeopleIcon />, path: '/users', isAdmin: true },
-          { label: 'จัดการประเภท/สถานที่', icon: <CategoryIcon />, path: '/master-data', isAdmin: true }
+          { label: 'Users', icon: <PeopleOutlineOutlinedIcon />, path: '/users' },
+          { label: 'Settings', icon: <SettingsOutlinedIcon />, path: '/master-data' }
         ]
       : [])
   ];
@@ -56,16 +57,40 @@ const Sidebar = ({ open, onClose, isMobile }) => {
     if (isMobile) onClose();
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const drawerContent = (
     <Box sx={{ overflow: 'auto', display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Toolbar />
-      <Box sx={{ p: 2.5 }}>
-        <Typography variant="overline" sx={{ color: 'text.secondary', fontWeight: 700, letterSpacing: 1 }}>
-          เมนูหลัก
-        </Typography>
+      {/* Brand Header */}
+      <Box sx={{ p: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Avatar
+          sx={{
+            bgcolor: 'primary.main',
+            width: 40,
+            height: 40,
+            borderRadius: 3,
+            boxShadow: '0 4px 10px rgba(29, 78, 216, 0.3)'
+          }}
+        >
+          <ConstructionIcon sx={{ color: '#ffffff', fontSize: 22 }} />
+        </Avatar>
+        <Box>
+          <Typography variant="h6" sx={{ fontSize: '1.05rem', fontWeight: 800, color: 'text.primary', leading: 1.1 }}>
+            RepairHub
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem', fontWeight: 600 }}>
+            Management System
+          </Typography>
+        </Box>
       </Box>
 
-      <List sx={{ px: 1.5, flexGrow: 1 }}>
+      <Divider sx={{ borderColor: '#f1f5f9' }} />
+
+      {/* Nav List */}
+      <List sx={{ px: 1.5, py: 2, flexGrow: 1 }}>
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
@@ -74,30 +99,27 @@ const Sidebar = ({ open, onClose, isMobile }) => {
                 selected={isActive}
                 onClick={() => handleNavigate(item.path)}
                 sx={{
-                  borderRadius: 2,
+                  borderRadius: 2.5,
                   py: 1.2,
                   px: 2,
-                  backgroundColor: isActive ? 'primary.main' : 'transparent',
-                  color: isActive ? '#ffffff' : 'text.primary',
+                  backgroundColor: isActive ? '#eff6ff' : 'transparent',
+                  color: isActive ? '#1d4ed8' : '#475569',
                   '&:hover': {
-                    backgroundColor: isActive ? 'primary.main' : 'rgba(30, 58, 138, 0.08)',
+                    backgroundColor: isActive ? '#eff6ff' : '#f8fafc',
                   },
                   '&.Mui-selected': {
-                    backgroundColor: 'primary.main',
-                    color: '#ffffff',
-                    '&:hover': {
-                      backgroundColor: 'primary.dark',
-                    },
+                    backgroundColor: '#eff6ff',
+                    color: '#1d4ed8',
                     '& .MuiListItemIcon-root': {
-                      color: '#ffffff',
+                      color: '#1d4ed8',
                     },
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
-                    color: isActive ? '#ffffff' : 'primary.main',
-                    minWidth: 40
+                    color: isActive ? '#1d4ed8' : '#64748b',
+                    minWidth: 38
                   }}
                 >
                   {item.icon}
@@ -105,26 +127,43 @@ const Sidebar = ({ open, onClose, isMobile }) => {
                 <ListItemText
                   primary={item.label}
                   primaryTypographyProps={{
-                    fontSize: '0.92rem',
-                    fontWeight: isActive ? 600 : 500
+                    fontSize: '0.9rem',
+                    fontWeight: isActive ? 700 : 500
                   }}
                 />
-                {item.isAdmin && (
-                  <Chip label="Admin" size="small" color="error" variant={isActive ? "filled" : "outlined"} sx={{ height: 20, fontSize: '0.65rem' }} />
-                )}
               </ListItemButton>
             </ListItem>
           );
         })}
       </List>
 
-      <Box sx={{ p: 2, m: 2, bgcolor: '#f1f5f9', borderRadius: 3, textAlign: 'center' }}>
-        <Typography variant="caption" color="text.secondary" display="block">
-          UniRepair v1.0.0
-        </Typography>
-        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
-          ระบบแจ้งซ่อมสำหรับโปรเจคจบ
-        </Typography>
+      <Divider sx={{ borderColor: '#f1f5f9' }} />
+
+      {/* Logout Footer */}
+      <Box sx={{ p: 1.5 }}>
+        <ListItemButton
+          onClick={handleLogout}
+          sx={{
+            borderRadius: 2.5,
+            py: 1.2,
+            px: 2,
+            color: '#dc2626',
+            '&:hover': {
+              backgroundColor: '#fef2f2',
+            }
+          }}
+        >
+          <ListItemIcon sx={{ color: '#dc2626', minWidth: 38 }}>
+            <LogoutOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="Logout"
+            primaryTypographyProps={{
+              fontSize: '0.9rem',
+              fontWeight: 600
+            }}
+          />
+        </ListItemButton>
       </Box>
     </Box>
   );
@@ -153,7 +192,7 @@ const Sidebar = ({ open, onClose, isMobile }) => {
           '& .MuiDrawer-paper': {
             boxSizing: 'border-box',
             width: DRAWER_WIDTH,
-            borderRight: '1px solid #e2e8f0',
+            borderRight: '1px solid #f1f5f9',
             backgroundColor: '#ffffff'
           },
         }}

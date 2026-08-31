@@ -2,22 +2,26 @@ import React, { useState } from 'react';
 import {
   Box,
   Card,
-  CardContent,
+  Grid,
   TextField,
   Button,
   Typography,
   Alert,
   Avatar,
+  Stack,
   InputAdornment,
-  IconButton
+  IconButton,
+  Divider
 } from '@mui/material';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PersonIcon from '@mui/icons-material/Person';
-import EmailIcon from '@mui/icons-material/Email';
-import LockIcon from '@mui/icons-material/Lock';
-import PhoneIcon from '@mui/icons-material/Phone';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -42,13 +46,17 @@ const Register = () => {
       return setError('รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน');
     }
 
+    if (password.length < 6) {
+      return setError('รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร');
+    }
+
     setLoading(true);
 
     try {
       await register(name, email, password, phone);
       navigate('/repairs');
     } catch (err) {
-      setError(err.response?.data?.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก');
+      setError(err.response?.data?.message || 'เกิดข้อผิดพลาดในการลงทะเบียน');
     } finally {
       setLoading(false);
     }
@@ -61,169 +69,322 @@ const Register = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1e1b4b 100%)',
-        p: 2
+        bgcolor: '#f8fafc',
+        p: { xs: 2, sm: 3 }
       }}
     >
       <Card
         sx={{
-          maxWidth: 480,
+          maxWidth: 940,
           width: '100%',
-          p: { xs: 2, sm: 3 },
           borderRadius: 4,
-          boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
-          bgcolor: '#ffffff'
+          boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.08)',
+          bgcolor: '#ffffff',
+          border: '1px solid #e2e8f0',
+          overflow: 'hidden'
         }}
       >
-        <CardContent sx={{ textAlign: 'center' }}>
-          <Avatar
+        <Grid container>
+          {/* Left Hero Section */}
+          <Grid
+            item
+            xs={12}
+            md={5}
             sx={{
-              bgcolor: 'secondary.main',
-              width: 56,
-              height: 56,
-              margin: '0 auto 12px',
-              boxShadow: '0 4px 14px rgba(13, 148, 136, 0.4)'
+              background: 'linear-gradient(135deg, #0f172a 0%, #1e40af 100%)',
+              color: '#ffffff',
+              p: { xs: 3, sm: 4.5 },
+              display: { xs: 'none', md: 'flex' },
+              flexDirection: 'column',
+              justify: 'space-between'
             }}
           >
-            <PersonAddIcon sx={{ fontSize: 32 }} />
-          </Avatar>
+            <Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 4 }}>
+                <Avatar
+                  sx={{
+                    bgcolor: '#ffffff',
+                    color: '#1d4ed8',
+                    width: 44,
+                    height: 44,
+                    borderRadius: 3,
+                    boxShadow: '0 4px 14px rgba(255,255,255,0.2)'
+                  }}
+                >
+                  <ConstructionIcon sx={{ fontSize: 26 }} />
+                </Avatar>
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.1, color: '#ffffff' }}>
+                    RepairHub
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#93c5fd', fontWeight: 600 }}>
+                    Management System
+                  </Typography>
+                </Box>
+              </Box>
 
-          <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main', mb: 0.5 }}>
-            สมัครสมาชิกใหม่
-          </Typography>
+              <Typography variant="h5" sx={{ fontWeight: 800, mb: 1.5, lineHeight: 1.3, letterSpacing: -0.5 }}>
+                ลงทะเบียนเข้าใช้งาน
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#cbd5e1', mb: 4, lineHeight: 1.6 }}>
+                สร้างบัญชีผู้ใช้งานใหม่สำหรับนักศึกษาและบุคลากรเพื่อแจ้งซ่อมอุปกรณ์และอาคารสถานที่
+              </Typography>
 
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            สำหรับนักศึกษาและบุคลากรเพื่อเข้าใช้งานระบบแจ้งซ่อม
-          </Typography>
+              <Stack direction="column" spacing={2.5}>
+                <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
+                  <CheckCircleOutlineIcon sx={{ color: '#60a5fa', fontSize: 20, mt: 0.2 }} />
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: '0.88rem' }}>
+                      ส่งคำขอแจ้งซ่อมรวดเร็ว
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: '#94a3b8' }}>
+                      กรอกข้อมูลสถานที่พร้อมแนบรูปภาพความเสียหาย
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
+                  <CheckCircleOutlineIcon sx={{ color: '#60a5fa', fontSize: 20, mt: 0.2 }} />
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: '0.88rem' }}>
+                      แจ้งเตือนความก้าวหน้า
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: '#94a3b8' }}>
+                      รับการแจ้งเตือนทันทีเมื่อช่างเข้าดำเนินการหรือซ่อมเสร็จ
+                    </Typography>
+                  </Box>
+                </Box>
+              </Stack>
+            </Box>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2, textAlign: 'left', borderRadius: 2 }}>
-              {error}
-            </Alert>
-          )}
+            <Typography variant="caption" sx={{ color: '#64748b', pt: 4, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              © 2026 UniFix RepairHub. All rights reserved.
+            </Typography>
+          </Grid>
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ textAlign: 'left' }}>
-            <TextField
-              margin="dense"
-              required
-              fullWidth
-              id="name"
-              label="ชื่อ - นามสกุล"
-              name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PersonIcon color="action" />
-                  </InputAdornment>
-                ),
-              }}
-            />
+          {/* Right Form Section */}
+          <Grid item xs={12} md={7} sx={{ p: { xs: 3, sm: 4.5 } }}>
+            {/* Mobile Header */}
+            <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1.5, mb: 3 }}>
+              <Avatar sx={{ bgcolor: '#1d4ed8', width: 40, height: 40, borderRadius: 2.5 }}>
+                <ConstructionIcon sx={{ fontSize: 24, color: '#ffffff' }} />
+              </Avatar>
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.1 }}>
+                  RepairHub
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Management System
+                </Typography>
+              </Box>
+            </Box>
 
-            <TextField
-              margin="dense"
-              required
-              fullWidth
-              id="email"
-              label="อีเมลมหาวิทยาลัย"
-              name="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <EmailIcon color="action" />
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h5" sx={{ fontWeight: 800, color: '#0f172a', letterSpacing: -0.5, mb: 0.5 }}>
+                สมัครสมาชิกใหม่ (Register)
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                กรอกรายละเอียดด้านล่างเพื่อสร้างบัญชีผู้ใช้งานระบบแจ้งซ่อม
+              </Typography>
+            </Box>
 
-            <TextField
-              margin="dense"
-              fullWidth
-              id="phone"
-              label="เบอร์โทรศัพท์ติดต่อ"
-              name="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PhoneIcon color="action" />
-                  </InputAdornment>
-                ),
-              }}
-            />
+            {error && (
+              <Alert severity="error" sx={{ mb: 2.5, borderRadius: 2.5 }}>
+                {error}
+              </Alert>
+            )}
 
-            <TextField
-              margin="dense"
-              required
-              fullWidth
-              name="password"
-              label="รหัสผ่าน"
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LockIcon color="action" />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
+            <Box component="form" onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="caption" sx={{ fontWeight: 700, color: '#334155', mb: 0.5, display: 'block' }}>
+                    ชื่อ - นามสกุล *
+                  </Typography>
+                  <TextField
+                    required
+                    fullWidth
+                    size="small"
+                    placeholder="เช่น นายรักเรียน ขยันยิ่ง"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PersonOutlineIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        borderRadius: 2.5,
+                        bgcolor: '#ffffff',
+                        '& input:-webkit-autofill': {
+                          WebkitBoxShadow: '0 0 0 100px #ffffff inset !important',
+                          WebkitTextFillColor: '#0f172a !important',
+                        }
+                      }
+                    }}
+                  />
+                </Grid>
 
-            <TextField
-              margin="dense"
-              required
-              fullWidth
-              name="confirmPassword"
-              label="ยืนยันรหัสผ่าน"
-              type={showPassword ? 'text' : 'password'}
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LockIcon color="action" />
-                  </InputAdornment>
-                ),
-              }}
-            />
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="caption" sx={{ fontWeight: 700, color: '#334155', mb: 0.5, display: 'block' }}>
+                    อีเมลมหาวิทยาลัย *
+                  </Typography>
+                  <TextField
+                    required
+                    fullWidth
+                    size="small"
+                    type="email"
+                    placeholder="student@university.ac.th"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <EmailOutlinedIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        borderRadius: 2.5,
+                        bgcolor: '#ffffff',
+                        '& input:-webkit-autofill': {
+                          WebkitBoxShadow: '0 0 0 100px #ffffff inset !important',
+                          WebkitTextFillColor: '#0f172a !important',
+                        }
+                      }
+                    }}
+                  />
+                </Grid>
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              size="large"
-              color="secondary"
-              disabled={loading}
-              sx={{ mt: 3, mb: 2, py: 1.4, fontSize: '1rem', fontWeight: 700 }}
-            >
-              {loading ? 'กำลังลงทะเบียน...' : 'ยืนยันลงทะเบียน'}
-            </Button>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="caption" sx={{ fontWeight: 700, color: '#334155', mb: 0.5, display: 'block' }}>
+                    เบอร์โทรศัพท์ติดต่อ
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    placeholder="081-234-5678"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PhoneOutlinedIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        borderRadius: 2.5,
+                        bgcolor: '#ffffff',
+                        '& input:-webkit-autofill': {
+                          WebkitBoxShadow: '0 0 0 100px #ffffff inset !important',
+                          WebkitTextFillColor: '#0f172a !important',
+                        }
+                      }
+                    }}
+                  />
+                </Grid>
 
-            <Box sx={{ textCenter: 'center', mt: 1 }}>
-              <Typography variant="body2" color="text.secondary" align="center">
-                มีบัญชีผู้ใช้งานแล้ว?{' '}
-                <Link to="/login" style={{ color: '#0d9488', fontWeight: 600, textDecoration: 'none' }}>
-                  เข้าสู่ระบบ
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="caption" sx={{ fontWeight: 700, color: '#334155', mb: 0.5, display: 'block' }}>
+                    รหัสผ่าน *
+                  </Typography>
+                  <TextField
+                    required
+                    fullWidth
+                    size="small"
+                    placeholder="อย่างน้อย 6 ตัวอักษร"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlinedIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small">
+                            {showPassword ? <VisibilityOff sx={{ fontSize: 18 }} /> : <Visibility sx={{ fontSize: 18 }} />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        borderRadius: 2.5,
+                        bgcolor: '#ffffff',
+                        '& input:-webkit-autofill': {
+                          WebkitBoxShadow: '0 0 0 100px #ffffff inset !important',
+                          WebkitTextFillColor: '#0f172a !important',
+                        }
+                      }
+                    }}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="caption" sx={{ fontWeight: 700, color: '#334155', mb: 0.5, display: 'block' }}>
+                    ยืนยันรหัสผ่าน *
+                  </Typography>
+                  <TextField
+                    required
+                    fullWidth
+                    size="small"
+                    placeholder="กรอกรหัสผ่านอีกครั้ง"
+                    type={showPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlinedIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        borderRadius: 2.5,
+                        bgcolor: '#ffffff',
+                        '& input:-webkit-autofill': {
+                          WebkitBoxShadow: '0 0 0 100px #ffffff inset !important',
+                          WebkitTextFillColor: '#0f172a !important',
+                        }
+                      }
+                    }}
+                  />
+                </Grid>
+              </Grid>
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                disabled={loading}
+                startIcon={<PersonAddOutlinedIcon />}
+                sx={{
+                  mt: 3.5,
+                  py: 1.2,
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  borderRadius: 2.5,
+                  bgcolor: '#1d4ed8',
+                  '&:hover': { bgcolor: '#1e40af' },
+                  boxShadow: '0 4px 14px rgba(29, 78, 216, 0.3)'
+                }}
+              >
+                {loading ? 'กำลังลงทะเบียน...' : 'ยืนยันลงทะเบียน'}
+              </Button>
+            </Box>
+
+            <Divider sx={{ my: 3, borderColor: '#f1f5f9' }} />
+
+            {/* Login Link */}
+            <Box sx={{ textCenter: 'center', textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary">
+                มีบัญชีผู้ใช้งานอยู่แล้ว?{' '}
+                <Link to="/login" style={{ color: '#1d4ed8', fontWeight: 700, textDecoration: 'none' }}>
+                  เข้าสู่ระบบที่นี่
                 </Link>
               </Typography>
             </Box>
-          </Box>
-        </CardContent>
+          </Grid>
+        </Grid>
       </Card>
     </Box>
   );
