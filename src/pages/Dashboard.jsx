@@ -95,14 +95,14 @@ const Dashboard = () => {
             <Skeleton variant="text" width={200} height={36} />
             <Skeleton variant="text" width={320} height={20} />
           </Box>
-          <Skeleton variant="rounded" width={120} height={36} sx={{ borderRadius: 2.5 }} />
+          <Skeleton variant="rounded" width={120} height={36} sx={{ borderRadius: 1.5 }} />
         </Box>
 
         {/* KPI Cards Skeleton */}
         <Grid container spacing={2} sx={{ mb: 3.5 }}>
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <Grid item xs={12} sm={6} md={4} lg={2} key={i}>
-              <Skeleton variant="rounded" height={110} sx={{ borderRadius: 3 }} />
+              <Skeleton variant="rounded" height={110} sx={{ borderRadius: 2 }} />
             </Grid>
           ))}
         </Grid>
@@ -110,15 +110,15 @@ const Dashboard = () => {
         {/* Charts Skeleton */}
         <Grid container spacing={3} sx={{ mb: 3.5 }}>
           <Grid item xs={12} md={8}>
-            <Skeleton variant="rounded" height={360} sx={{ borderRadius: 3 }} />
+            <Skeleton variant="rounded" height={360} sx={{ borderRadius: 2 }} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <Skeleton variant="rounded" height={360} sx={{ borderRadius: 3 }} />
+            <Skeleton variant="rounded" height={360} sx={{ borderRadius: 2 }} />
           </Grid>
         </Grid>
 
         {/* Table Skeleton */}
-        <Skeleton variant="rounded" height={280} sx={{ borderRadius: 3 }} />
+        <Skeleton variant="rounded" height={280} sx={{ borderRadius: 2 }} />
       </Box>
     );
   }
@@ -134,7 +134,7 @@ const Dashboard = () => {
               ลองอีกครั้ง
             </Button>
           }
-          sx={{ borderRadius: 3, mb: 3, textAlign: 'left' }}
+          sx={{ borderRadius: 1.5, mb: 3, textAlign: 'left' }}
         >
           {error}
         </Alert>
@@ -247,7 +247,7 @@ const Dashboard = () => {
               sx={{
                 bgcolor: '#ffffff',
                 border: '1px solid #e2e8f0',
-                borderRadius: 2.5,
+                borderRadius: 1.5,
                 '&:hover': { bgcolor: '#f8fafc' }
               }}
             >
@@ -261,7 +261,7 @@ const Dashboard = () => {
             startIcon={<FileDownloadOutlinedIcon />}
             onClick={() => navigate('/repairs')}
             sx={{
-              borderRadius: 2.5,
+              borderRadius: 1.5,
               borderColor: '#cbd5e1',
               color: '#334155',
               fontWeight: 700,
@@ -280,7 +280,7 @@ const Dashboard = () => {
           <Grid item xs={12} sm={6} md={4} lg={2} key={idx}>
             <Card
               sx={{
-                borderRadius: 3,
+                borderRadius: 2,
                 border: '1px solid #e2e8f0',
                 boxShadow: 'none',
                 transition: 'all 0.2s ease-in-out',

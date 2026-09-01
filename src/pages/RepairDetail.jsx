@@ -117,7 +117,7 @@ const RepairDetail = () => {
   if (error || !repair) {
     return (
       <Box sx={{ p: 2 }}>
-        <Alert severity="error" sx={{ mb: 2, borderRadius: 2.5 }}>{error || 'ไม่พบข้อมูล'}</Alert>
+        <Alert severity="error" sx={{ mb: 2, borderRadius: 1.5 }}>{error || 'ไม่พบข้อมูล'}</Alert>
         <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/repairs')}>
           กลับสู่รายการแจ้งซ่อม
         </Button>
@@ -142,7 +142,7 @@ const RepairDetail = () => {
       {/* Breadcrumb */}
       <Breadcrumbs sx={{ mb: 2, fontSize: '0.85rem' }}>
         <MuiLink underline="hover" color="inherit" onClick={() => navigate('/repairs')} sx={{ cursor: 'pointer' }}>
-          Repair Requests
+          รายการแจ้งซ่อม
         </MuiLink>
         <Typography color="text.primary" sx={{ fontSize: '0.85rem', fontWeight: 700 }}>
           REQ-2023-00{repair.id}
@@ -167,7 +167,7 @@ const RepairDetail = () => {
                 variant="outlined"
                 startIcon={<EditIcon />}
                 onClick={() => setOpenModal(true)}
-                sx={{ borderRadius: 2.5, borderColor: '#cbd5e1', color: '#334155', fontWeight: 700 }}
+                sx={{ borderRadius: 1.5, borderColor: '#cbd5e1', color: '#334155', fontWeight: 700 }}
               >
                 แก้ไข
               </Button>
@@ -175,7 +175,7 @@ const RepairDetail = () => {
                 variant="contained"
                 startIcon={<BuildIcon />}
                 onClick={() => setOpenModal(true)}
-                sx={{ borderRadius: 2.5, bgcolor: '#1d4ed8', fontWeight: 700 }}
+                sx={{ borderRadius: 1.5, bgcolor: '#1d4ed8', fontWeight: 700 }}
               >
                 รับงาน
               </Button>
@@ -189,7 +189,7 @@ const RepairDetail = () => {
         {/* Left Column: Details & Comments */}
         <Grid item xs={12} md={8}>
           {/* Details Card */}
-          <Card sx={{ p: 3, mb: 3, borderRadius: 4, border: '1px solid #e2e8f0' }}>
+          <Card sx={{ p: 3, mb: 3, borderRadius: 2, border: '1px solid #e2e8f0' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <InfoOutlinedIcon sx={{ color: '#1d4ed8', fontSize: 20 }} />
@@ -237,7 +237,7 @@ const RepairDetail = () => {
             <Typography variant="caption" sx={{ fontWeight: 700, color: '#64748b', display: 'block', mb: 0.8 }}>
               รายละเอียดปัญหา (DESCRIPTION)
             </Typography>
-            <Paper variant="outlined" sx={{ p: 2.5, bgcolor: '#f8fafc', borderRadius: 3, border: '1px solid #e2e8f0', mb: 3 }}>
+            <Paper variant="outlined" sx={{ p: 2.5, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0', mb: 3 }}>
               <Typography variant="body2" sx={{ color: '#334155', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
                 {repair.description}
               </Typography>
@@ -260,7 +260,7 @@ const RepairDetail = () => {
           </Card>
 
           {/* Work logs & Comments */}
-          <Card sx={{ p: 3, borderRadius: 4, border: '1px solid #e2e8f0' }}>
+          <Card sx={{ p: 3, borderRadius: 2, border: '1px solid #e2e8f0' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
               <ModeCommentOutlinedIcon sx={{ color: '#1d4ed8', fontSize: 20 }} />
               <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#0f172a' }}>
@@ -270,7 +270,7 @@ const RepairDetail = () => {
 
             <Stack direction="column" spacing={2}>
               {repair.logs?.map((log) => (
-                <Paper key={log.id} variant="outlined" sx={{ p: 2, borderRadius: 3, bgcolor: '#ffffff', border: '1px solid #e2e8f0' }}>
+                <Paper key={log.id} variant="outlined" sx={{ p: 2, borderRadius: 2, bgcolor: '#ffffff', border: '1px solid #e2e8f0' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
                     <Avatar sx={{ width: 32, height: 32, bgcolor: '#eff6ff', color: '#1d4ed8', fontSize: '0.75rem', fontWeight: 700 }}>
                       {log.user?.name?.charAt(0) || 'U'}
@@ -293,13 +293,13 @@ const RepairDetail = () => {
                   {/* Attached photo preview */}
                   {repair.image && (
                     <Box sx={{ mt: 1.5 }}>
-                      <Paper variant="outlined" sx={{ p: 1, display: 'inline-block', borderRadius: 2 }}>
+                      <Paper variant="outlined" sx={{ p: 1, display: 'inline-block', borderRadius: 1.5 }}>
                         <Box
                           component="img"
                           src={repair.image}
                           alt="Attached preview"
                           onClick={() => setPhotoOpen(true)}
-                          sx={{ width: 140, height: 100, objectFit: 'cover', borderRadius: 1.5, cursor: 'pointer' }}
+                          sx={{ width: 140, height: 100, objectFit: 'cover', borderRadius: 1, cursor: 'pointer' }}
                         />
                       </Paper>
                     </Box>
@@ -313,9 +313,9 @@ const RepairDetail = () => {
         {/* Right Column: Actions Control & Progress Timeline */}
         <Grid item xs={12} md={4}>
           {/* Actions Box */}
-          <Card sx={{ p: 2.5, mb: 3, borderRadius: 4, border: '1px solid #e2e8f0' }}>
+          <Card sx={{ p: 2.5, mb: 3, borderRadius: 2, border: '1px solid #e2e8f0' }}>
             <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#0f172a', mb: 2 }}>
-              จัดการสถานะ (ACTIONS)
+              จัดการสถานะ
             </Typography>
 
             <Stack direction="column" spacing={1.5}>
@@ -324,9 +324,9 @@ const RepairDetail = () => {
                 fullWidth
                 startIcon={<AccessTimeOutlinedIcon />}
                 onClick={() => { setNewStatus('ACCEPTED'); setOpenModal(true); }}
-                sx={{ borderRadius: 2.5, py: 1, borderColor: '#cbd5e1', color: '#334155', fontWeight: 700 }}
+                sx={{ borderRadius: 1.5, py: 1, borderColor: '#cbd5e1', color: '#334155', fontWeight: 700 }}
               >
-                Pending Review
+                รับเรื่อง / รอดำเนินการ
               </Button>
               <Button
                 variant="outlined"
@@ -334,9 +334,9 @@ const RepairDetail = () => {
                 color="success"
                 startIcon={<CheckCircleOutlinedIcon />}
                 onClick={() => { setNewStatus('COMPLETED'); setOpenModal(true); }}
-                sx={{ borderRadius: 2.5, py: 1, fontWeight: 700 }}
+                sx={{ borderRadius: 1.5, py: 1, fontWeight: 700 }}
               >
-                Completed
+                ซ่อมเสร็จแล้ว
               </Button>
               <Button
                 variant="outlined"
@@ -344,9 +344,9 @@ const RepairDetail = () => {
                 color="error"
                 startIcon={<HighlightOffOutlinedIcon />}
                 onClick={() => { setNewStatus('CANCELLED'); setOpenModal(true); }}
-                sx={{ borderRadius: 2.5, py: 1, fontWeight: 700 }}
+                sx={{ borderRadius: 1.5, py: 1, fontWeight: 700 }}
               >
-                Closed
+                ยกเลิกคำร้อง
               </Button>
             </Stack>
           </Card>

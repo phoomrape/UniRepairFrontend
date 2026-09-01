@@ -143,10 +143,10 @@ const CreateRepair = () => {
         </Typography>
       </Box>
 
-      {error && <Alert severity="error" sx={{ mb: 3, borderRadius: 2.5 }}>{error}</Alert>}
-      {success && <Alert severity="success" sx={{ mb: 3, borderRadius: 2.5 }}>ส่งข้อมูลแจ้งซ่อมสำเร็จ! กำลังนำท่านไปยังหน้ารายการ...</Alert>}
+      {error && <Alert severity="error" sx={{ mb: 3, borderRadius: 1.5 }}>{error}</Alert>}
+      {success && <Alert severity="success" sx={{ mb: 3, borderRadius: 1.5 }}>ส่งข้อมูลแจ้งซ่อมสำเร็จ! กำลังนำท่านไปยังหน้ารายการ...</Alert>}
 
-      <Card sx={{ p: { xs: 2.5, sm: 4 }, borderRadius: 4, border: '1px solid #e2e8f0' }}>
+      <Card sx={{ p: { xs: 2.5, sm: 4 }, borderRadius: 2, border: '1px solid #e2e8f0' }}>
         <Box component="form" onSubmit={handleSubmit}>
 
           {/* Section 1: Basic Information */}
@@ -168,7 +168,7 @@ const CreateRepair = () => {
               value={description.split('\n')[0] || ''}
               onChange={(e) => setDescription(e.target.value)}
               sx={{ mb: 2.5 }}
-              InputProps={{ sx: { borderRadius: 2.5, bgcolor: '#ffffff' } }}
+              InputProps={{ sx: { borderRadius: 1.5, bgcolor: '#ffffff' } }}
             />
 
             <Typography variant="caption" sx={{ fontWeight: 700, color: '#334155', mb: 0.8, display: 'block' }}>
@@ -181,7 +181,7 @@ const CreateRepair = () => {
               placeholder="Provide detailed information about the issue..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              InputProps={{ sx: { borderRadius: 2.5, bgcolor: '#ffffff' } }}
+              InputProps={{ sx: { borderRadius: 1.5, bgcolor: '#ffffff' } }}
             />
           </Box>
 
@@ -207,7 +207,7 @@ const CreateRepair = () => {
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
                 sx={{ mb: 2.5 }}
-                InputProps={{ sx: { borderRadius: 2.5 } }}
+                InputProps={{ sx: { borderRadius: 1.5 } }}
               >
                 {categories.map((cat) => (
                   <MenuItem key={cat.id} value={cat.id}>
@@ -227,7 +227,7 @@ const CreateRepair = () => {
                     onClick={() => setPriority(p)}
                     sx={{
                       flex: 1,
-                      borderRadius: 2.5,
+                      borderRadius: 1.5,
                       py: 1,
                       fontWeight: 700,
                       borderColor: '#e2e8f0',
@@ -260,7 +260,7 @@ const CreateRepair = () => {
                 value={locationId}
                 onChange={(e) => setLocationId(e.target.value)}
                 sx={{ mb: 2.5 }}
-                InputProps={{ sx: { borderRadius: 2.5 } }}
+                InputProps={{ sx: { borderRadius: 1.5 } }}
               >
                 {locations.map((loc) => (
                   <MenuItem key={loc.id} value={loc.id}>
@@ -278,7 +278,7 @@ const CreateRepair = () => {
                 placeholder="e.g., Floor 3, Room 304"
                 value={room}
                 onChange={(e) => setRoom(e.target.value)}
-                InputProps={{ sx: { borderRadius: 2.5 } }}
+                InputProps={{ sx: { borderRadius: 1.5 } }}
               />
             </Grid>
           </Grid>
@@ -304,7 +304,7 @@ const CreateRepair = () => {
                   justifyContent: 'center',
                   p: 4,
                   border: '2px dashed #cbd5e1',
-                  borderRadius: 3,
+                  borderRadius: 2,
                   bgcolor: '#f8fafc',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
@@ -331,14 +331,14 @@ const CreateRepair = () => {
                   alignItems: 'center',
                   gap: 2,
                   bgcolor: '#f8fafc',
-                  borderRadius: 3
+                  borderRadius: 2
                 }}
               >
                 <Box
                   component="img"
                   src={imagePreview}
                   alt="Preview"
-                  sx={{ width: 100, height: 75, objectFit: 'cover', borderRadius: 2 }}
+                  sx={{ width: 100, height: 75, objectFit: 'cover', borderRadius: 1.5 }}
                 />
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="subtitle2" noWrap sx={{ fontWeight: 700 }}>
@@ -366,7 +366,7 @@ const CreateRepair = () => {
             </Button>
             <Button
               variant="outlined"
-              sx={{ borderRadius: 2.5, borderColor: '#cbd5e1', color: '#334155', fontWeight: 700 }}
+              sx={{ borderRadius: 1.5, borderColor: '#cbd5e1', color: '#334155', fontWeight: 700 }}
             >
               Save Draft
             </Button>
@@ -376,7 +376,7 @@ const CreateRepair = () => {
               disabled={submitting}
               startIcon={<SendIcon />}
               sx={{
-                borderRadius: 2.5,
+                borderRadius: 1.5,
                 px: 3,
                 py: 1,
                 bgcolor: '#1d4ed8',

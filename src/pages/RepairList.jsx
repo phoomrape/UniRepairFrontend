@@ -143,12 +143,12 @@ const RepairList = () => {
             exclusive
             onChange={(e, val) => val && setViewMode(val)}
             size="small"
-            sx={{ bgcolor: '#f1f5f9', p: 0.5, borderRadius: 2.5 }}
+            sx={{ bgcolor: '#f1f5f9', p: 0.5, borderRadius: 1.5 }}
           >
-            <ToggleButton value="board" sx={{ borderRadius: 2, px: 2, fontWeight: 700, '&.Mui-selected': { bgcolor: '#ffffff', color: '#1d4ed8', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } }}>
+            <ToggleButton value="board" sx={{ borderRadius: 1, px: 2, fontWeight: 700, '&.Mui-selected': { bgcolor: '#ffffff', color: '#1d4ed8', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } }}>
               <ViewKanbanOutlinedIcon sx={{ fontSize: 18, mr: 0.8 }} /> บอร์ด
             </ToggleButton>
-            <ToggleButton value="list" sx={{ borderRadius: 2, px: 2, fontWeight: 700, '&.Mui-selected': { bgcolor: '#ffffff', color: '#1d4ed8', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } }}>
+            <ToggleButton value="list" sx={{ borderRadius: 1, px: 2, fontWeight: 700, '&.Mui-selected': { bgcolor: '#ffffff', color: '#1d4ed8', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' } }}>
               <FormatListBulletedOutlinedIcon sx={{ fontSize: 18, mr: 0.8 }} /> รายการ
             </ToggleButton>
           </ToggleButtonGroup>
@@ -156,7 +156,7 @@ const RepairList = () => {
           <Button
             variant="contained"
             onClick={() => navigate('/create-repair')}
-            sx={{ borderRadius: 2.5, px: 2.5, fontWeight: 700, bgcolor: '#1d4ed8' }}
+            sx={{ borderRadius: 1.5, px: 2.5, fontWeight: 700, bgcolor: '#1d4ed8' }}
           >
             + New Request
           </Button>
@@ -164,7 +164,7 @@ const RepairList = () => {
       </Box>
 
       {/* Search Filter Bar */}
-      <Card sx={{ p: 2, mb: 3, borderRadius: 3, border: '1px solid #e2e8f0' }}>
+      <Card sx={{ p: 2, mb: 3, borderRadius: 2, border: '1px solid #e2e8f0' }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={6} md={4}>
             <TextField
@@ -179,7 +179,7 @@ const RepairList = () => {
                     <SearchIcon sx={{ color: '#94a3b8', fontSize: 20 }} />
                   </InputAdornment>
                 ),
-                sx: { borderRadius: 2.5, bgcolor: '#f8fafc' }
+                sx: { borderRadius: 1.5, bgcolor: '#f8fafc' }
               }}
             />
           </Grid>
@@ -191,7 +191,7 @@ const RepairList = () => {
               label="สถานะ"
               value={status}
               onChange={(e) => { setStatus(e.target.value); setPage(0); }}
-              InputProps={{ sx: { borderRadius: 2.5 } }}
+              InputProps={{ sx: { borderRadius: 1.5 } }}
             >
               {STATUS_OPTIONS.map((opt) => (
                 <MenuItem key={opt.value} value={opt.value}>
@@ -208,7 +208,7 @@ const RepairList = () => {
               label="หมวดหมู่"
               value={categoryId}
               onChange={(e) => { setCategoryId(e.target.value); setPage(0); }}
-              InputProps={{ sx: { borderRadius: 2.5 } }}
+              InputProps={{ sx: { borderRadius: 1.5 } }}
             >
               <MenuItem value="">ทุกหมวดหมู่</MenuItem>
               {categories.map((c) => (
@@ -223,7 +223,7 @@ const RepairList = () => {
               size="medium"
               startIcon={<ClearIcon />}
               onClick={handleClearFilters}
-              sx={{ borderRadius: 2.5, borderColor: '#cbd5e1', color: '#64748b' }}
+              sx={{ borderRadius: 1.5, borderColor: '#cbd5e1', color: '#64748b' }}
             >
               ล้างกรอง
             </Button>
@@ -231,14 +231,14 @@ const RepairList = () => {
         </Grid>
       </Card>
 
-      {error && <Alert severity="error" sx={{ mb: 3, borderRadius: 2.5 }}>{error}</Alert>}
+      {error && <Alert severity="error" sx={{ mb: 3, borderRadius: 1.5 }}>{error}</Alert>}
 
       {/* BOARD VIEW (Kanban Columns) */}
       {viewMode === 'board' ? (
         <Grid container spacing={2.5}>
           {/* Column 1: Unassigned / PENDING */}
           <Grid item xs={12} md={4}>
-            <Paper sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: 3, border: '1px solid #e2e8f0', minHeight: 500 }}>
+            <Paper sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0', minHeight: 500 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#0f172a' }}>
                   ยังไม่มอบหมาย
@@ -253,7 +253,7 @@ const RepairList = () => {
                     onClick={() => navigate(`/repairs/${item.id}`)}
                     sx={{
                       p: 2,
-                      borderRadius: 3,
+                      borderRadius: 2,
                       border: '1px solid #e2e8f0',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
@@ -289,7 +289,7 @@ const RepairList = () => {
 
           {/* Column 2: Pending Review / ACCEPTED */}
           <Grid item xs={12} md={4}>
-            <Paper sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: 3, border: '1px solid #e2e8f0', minHeight: 500 }}>
+            <Paper sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0', minHeight: 500 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#0f172a' }}>
                   รอดำเนินการ
@@ -304,7 +304,7 @@ const RepairList = () => {
                     onClick={() => navigate(`/repairs/${item.id}`)}
                     sx={{
                       p: 2,
-                      borderRadius: 3,
+                      borderRadius: 2,
                       border: '1px solid #e2e8f0',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
@@ -341,7 +341,7 @@ const RepairList = () => {
 
           {/* Column 3: In Progress / IN_PROGRESS */}
           <Grid item xs={12} md={4}>
-            <Paper sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: 3, border: '1px solid #e2e8f0', minHeight: 500 }}>
+            <Paper sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0', minHeight: 500 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#0f172a' }}>
                   กำลังดำเนินการ
@@ -356,8 +356,10 @@ const RepairList = () => {
                     onClick={() => navigate(`/repairs/${item.id}`)}
                     sx={{
                       p: 2,
-                      borderRadius: 3,
+                      borderRadius: 2,
+                      border: '1px solid #e2e8f0',
                       borderLeft: '4px solid #1d4ed8',
+                      overflow: 'hidden',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
                       '&:hover': { boxShadow: '0 8px 20px -5px rgba(0,0,0,0.08)', transform: 'translateY(-2px)' }
@@ -382,7 +384,7 @@ const RepairList = () => {
         </Grid>
       ) : (
         /* LIST VIEW TABLE */
-        <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: 'none', border: '1px solid #e2e8f0' }}>
+        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 'none', border: '1px solid #e2e8f0' }}>
           <Table sx={{ minWidth: 800 }}>
             <TableHead sx={{ bgcolor: '#f8fafc' }}>
               <TableRow>

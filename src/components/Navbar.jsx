@@ -74,7 +74,7 @@ const Navbar = ({ onToggleSidebar }) => {
           <TextField
             size="small"
             fullWidth
-            placeholder="Search requests..."
+            placeholder="ค้นหาคำร้องแจ้งซ่อม..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -82,7 +82,7 @@ const Navbar = ({ onToggleSidebar }) => {
                 </InputAdornment>
               ),
               sx: {
-                borderRadius: 3,
+                borderRadius: 1.5,
                 bgcolor: '#f8fafc',
                 fontSize: '0.88rem',
                 '& fieldset': { border: '1px solid #e2e8f0' },
@@ -98,7 +98,7 @@ const Navbar = ({ onToggleSidebar }) => {
             startIcon={<HelpOutlineIcon sx={{ fontSize: 18 }} />}
             sx={{ color: '#64748b', fontSize: '0.85rem', display: { xs: 'none', md: 'inline-flex' } }}
           >
-            Help
+            ช่วยเหลือ
           </Button>
 
           <IconButton onClick={() => navigate('/notifications')} sx={{ color: '#64748b' }}>
@@ -113,7 +113,7 @@ const Navbar = ({ onToggleSidebar }) => {
             startIcon={<AddIcon />}
             onClick={() => navigate('/create-repair')}
             sx={{
-              borderRadius: 2.5,
+              borderRadius: 1.5,
               px: 2.2,
               py: 0.9,
               fontWeight: 700,
@@ -121,11 +121,11 @@ const Navbar = ({ onToggleSidebar }) => {
               boxShadow: '0 4px 14px rgba(29, 78, 216, 0.25)'
             }}
           >
-            + New Request
+            + แจ้งซ่อมใหม่
           </Button>
 
           {user && (
-            <Tooltip title="Account Settings">
+            <Tooltip title="ตั้งค่าบัญชี">
               <IconButton onClick={handleOpenMenu} sx={{ p: 0.5 }}>
                 <Avatar sx={{ bgcolor: 'primary.dark', width: 38, height: 38, fontWeight: 700, fontSize: '0.9rem' }}>
                   {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
@@ -144,7 +144,7 @@ const Navbar = ({ onToggleSidebar }) => {
               sx: {
                 width: 220,
                 mt: 1.5,
-                borderRadius: 3,
+                borderRadius: 2,
                 boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
               }
             }}
@@ -162,7 +162,7 @@ const Navbar = ({ onToggleSidebar }) => {
               <ListItemIcon sx={{ color: '#dc2626' }}>
                 <LogoutIcon fontSize="small" />
               </ListItemIcon>
-              Logout
+              ออกจากระบบ
             </MenuItem>
           </Menu>
         </Box>

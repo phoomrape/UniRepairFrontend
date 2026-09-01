@@ -35,19 +35,19 @@ const Sidebar = ({ open, onClose, isMobile }) => {
 
   const navItems = [
     ...(role === 'ADMIN' || role === 'STAFF'
-      ? [{ label: 'Dashboard', icon: <DashboardOutlinedIcon />, path: '/dashboard' }]
+      ? [{ label: 'แดชบอร์ด', icon: <DashboardOutlinedIcon />, path: '/dashboard' }]
       : []),
     {
-      label: role === 'USER' ? 'Repair Requests' : 'Repair Requests',
+      label: 'รายการแจ้งซ่อม',
       icon: <BuildCircleOutlinedIcon />,
       path: '/repairs'
     },
-    { label: 'My History', icon: <BarChartOutlinedIcon />, path: '/my-history' },
-    { label: 'Notifications', icon: <NotificationsNoneOutlinedIcon />, path: '/notifications' },
+    { label: 'ประวัติแจ้งซ่อมของฉัน', icon: <BarChartOutlinedIcon />, path: '/my-history' },
+    { label: 'การแจ้งเตือน', icon: <NotificationsNoneOutlinedIcon />, path: '/notifications' },
     ...(role === 'ADMIN'
       ? [
-          { label: 'Users', icon: <PeopleOutlineOutlinedIcon />, path: '/users' },
-          { label: 'Settings', icon: <SettingsOutlinedIcon />, path: '/master-data' }
+          { label: 'จัดการผู้ใช้งาน', icon: <PeopleOutlineOutlinedIcon />, path: '/users' },
+          { label: 'ตั้งค่าระบบ', icon: <SettingsOutlinedIcon />, path: '/master-data' }
         ]
       : [])
   ];
@@ -71,7 +71,7 @@ const Sidebar = ({ open, onClose, isMobile }) => {
             bgcolor: 'primary.main',
             width: 40,
             height: 40,
-            borderRadius: 3,
+            borderRadius: 2,
             boxShadow: '0 4px 10px rgba(29, 78, 216, 0.3)'
           }}
         >
@@ -99,7 +99,7 @@ const Sidebar = ({ open, onClose, isMobile }) => {
                 selected={isActive}
                 onClick={() => handleNavigate(item.path)}
                 sx={{
-                  borderRadius: 2.5,
+                  borderRadius: 1.5,
                   py: 1.2,
                   px: 2,
                   backgroundColor: isActive ? '#eff6ff' : 'transparent',
@@ -144,7 +144,7 @@ const Sidebar = ({ open, onClose, isMobile }) => {
         <ListItemButton
           onClick={handleLogout}
           sx={{
-            borderRadius: 2.5,
+            borderRadius: 1.5,
             py: 1.2,
             px: 2,
             color: '#dc2626',
@@ -157,7 +157,7 @@ const Sidebar = ({ open, onClose, isMobile }) => {
             <LogoutOutlinedIcon />
           </ListItemIcon>
           <ListItemText
-            primary="Logout"
+            primary="ออกจากระบบ"
             primaryTypographyProps={{
               fontSize: '0.9rem',
               fontWeight: 600

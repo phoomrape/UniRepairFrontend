@@ -32,15 +32,16 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: '"Inter", "Prompt", "Sarabun", sans-serif',
-    h1: { fontWeight: 700 },
-    h2: { fontWeight: 700 },
-    h3: { fontWeight: 700 },
-    h4: { fontWeight: 700 },
-    h5: { fontWeight: 700 },
-    h6: { fontWeight: 600 },
-    subtitle1: { fontWeight: 600 },
-    button: { textTransform: 'none', fontWeight: 600 },
+    fontFamily: '"Plus Jakarta Sans", "Noto Sans Thai", "IBM Plex Sans Thai", "Inter", "Prompt", sans-serif',
+    h1: { fontWeight: 800, letterSpacing: '-0.02em' },
+    h2: { fontWeight: 800, letterSpacing: '-0.02em' },
+    h3: { fontWeight: 800, letterSpacing: '-0.015em' },
+    h4: { fontWeight: 800, letterSpacing: '-0.015em' },
+    h5: { fontWeight: 800, letterSpacing: '-0.01em' },
+    h6: { fontWeight: 700, letterSpacing: '-0.01em' },
+    subtitle1: { fontWeight: 700 },
+    subtitle2: { fontWeight: 700 },
+    button: { textTransform: 'none', fontWeight: 700 },
   },
   shape: {
     borderRadius: 12,
@@ -68,7 +69,7 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
+          borderRadius: 12,
           boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
           border: '1px solid #e2e8f0',
         },
@@ -78,14 +79,14 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: 600,
-          borderRadius: 8,
+          borderRadius: 6,
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         rounded: {
-          borderRadius: 14,
+          borderRadius: 12,
         },
       },
     },

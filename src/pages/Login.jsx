@@ -106,7 +106,7 @@ const Login = () => {
                     color: '#1d4ed8',
                     width: 44,
                     height: 44,
-                    borderRadius: 3,
+                    borderRadius: 2,
                     boxShadow: '0 4px 14px rgba(255,255,255,0.2)'
                   }}
                 >
@@ -163,8 +163,8 @@ const Login = () => {
           {/* Right Form Section */}
           <Grid item xs={12} md={7} sx={{ p: { xs: 3, sm: 4.5 } }}>
             {/* Mobile Header */}
-            <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1.5, mb: 3 }}>
-              <Avatar sx={{ bgcolor: '#1d4ed8', width: 40, height: 40, borderRadius: 2.5 }}>
+            <Box sx={{ display: { xs: 'block', md: 'none' }, alignItems: 'center', gap: 1.5, mb: 3 }}>
+              <Avatar sx={{ bgcolor: '#1d4ed8', width: 40, height: 40, borderRadius: 2 }}>
                 <ConstructionIcon sx={{ fontSize: 24, color: '#ffffff' }} />
               </Avatar>
               <Box>
@@ -187,7 +187,7 @@ const Login = () => {
             </Box>
 
             {error && (
-              <Alert severity="error" sx={{ mb: 2.5, borderRadius: 2.5 }}>
+              <Alert severity="error" sx={{ mb: 2.5, borderRadius: 1.5 }}>
                 {error}
               </Alert>
             )}
@@ -214,7 +214,7 @@ const Login = () => {
                     </InputAdornment>
                   ),
                   sx: {
-                    borderRadius: 2.5,
+                    borderRadius: 1.5,
                     bgcolor: '#ffffff',
                     fontSize: '0.9rem',
                     '& input:-webkit-autofill': {
@@ -254,7 +254,7 @@ const Login = () => {
                     </InputAdornment>
                   ),
                   sx: {
-                    borderRadius: 2.5,
+                    borderRadius: 1.5,
                     bgcolor: '#ffffff',
                     fontSize: '0.9rem',
                     '& input:-webkit-autofill': {
@@ -293,7 +293,7 @@ const Login = () => {
                   py: 1.3,
                   fontSize: '0.95rem',
                   fontWeight: 700,
-                  borderRadius: 2.5,
+                  borderRadius: 1.5,
                   bgcolor: '#1d4ed8',
                   '&:hover': { bgcolor: '#1e40af' },
                   boxShadow: '0 4px 14px rgba(29, 78, 216, 0.3)'

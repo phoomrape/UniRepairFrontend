@@ -55,7 +55,7 @@ const MyHistory = () => {
 
       {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
-      <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+      <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
         <Table sx={{ minWidth: 700 }}>
           <TableHead sx={{ bgcolor: '#f1f5f9' }}>
             <TableRow>
